@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 from data_scraper import get_comp_list, get_comp_list_mca
 from fuzzywuzzy import process
 import  pprint
@@ -8,12 +10,13 @@ app = FastAPI()
 @app.get("/epfo/{companyName}")
 async def readEpfo(companyName):
     '''api call epfo'''
-    print("ABC")
+    print("Epfo scraping for :" + str(companyName))
     return perform_epfo(companyName)
 
 @app.get("/mca/{companyName}")
 async def readMca(companyName):
     '''api call epfo'''
+    print("mca scraping for :" + str(companyName))
     return perform_mca(companyName)
 
 @app.get("/")
@@ -33,12 +36,12 @@ async def devInfo():
 
 def perform_epfo(name):
     comp_list = get_comp_list(name)
-    pprint.pprint(comp_list[0])
+    # pprint.pprint(comp_list[0])
     return comp_list[0]
 
 def perform_mca(name):
     comp_list = get_comp_list_mca(name)
-    pprint.pprint(comp_list)
+    # pprint.pprint(comp_list)
     return comp_list
 
     

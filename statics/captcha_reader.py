@@ -95,7 +95,6 @@ def chars_to_string(chars):
 
 
 def decode(filename):
-    print('3')
     gray = cv.imread(filename, cv.IMREAD_GRAYSCALE)
     ret, thresh = cv.threshold(gray, 100, 255, cv.THRESH_BINARY)
     kernel = np.ones((1,1),np.uint8)

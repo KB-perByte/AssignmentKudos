@@ -12,7 +12,6 @@ def get_soup(session, url):
     return my_soup
 
 def get_comp_list(company_name):
-    print('1')
     sesh = requests.Session()
     my_soup = get_soup(sesh, EPFO_URL)
     company_list = []
@@ -25,18 +24,16 @@ def post_search_establishment_request(my_soup, session, est_name, est_code=""):
     my_url = get_full_url(est_req)
     response = None
     i = 0
-    print('1')
     while response is None: 
         captcha = generate_and_read_captcha(my_soup, session)
-       
         if len(captcha) > 4:
-            print(captcha)
+            # print(captcha)
             response = session.post(my_url, data=json.dumps({"EstName": est_name, "EstCode": est_code, "captcha": captcha}),
                                     headers={'Content-Type': 'application/json'})
-            print(str(response.content))
+            # print(str(response.content))
             if 'Please enter valid captcha' in str(response.content):
                 i+=1
-                print("Try: - ", i)
+                print("Try: ", i)
                 response = None
     return response
 
@@ -61,11 +58,6 @@ def get_company_list(establishment_response):
     dataDict = { "EstablishmentID": None,
                 "EstablishmentName": None,
                 "EstablishmentAddress": None }
-
-    # for org in my_soup.find_all("a", href=True):
-    #     print(org)
-    #     name_list.append(org["name"])
-    # return name_list
     idx = 0
     for org in my_soup.find_all("td"):
         if idx == 5 or idx == 0:
@@ -88,7 +80,6 @@ def get_company_list(establishment_response):
         
     return name_list
 
-
 def get_comp_list_mca(name):
     respStruct = []
     payload = {'counter':1,
@@ -109,9 +100,9 @@ def get_comp_list_mca(name):
         s.get(MCA_URL ,data=payload)
         headers = {'content-type': 'application/json', "User-Agent":"Mozilla/5.0"}
         response = s.post("http://www.mca.gov.in/mcafoportal/checkCompanyName.do?counter=1&name1="+name+"&name2=&name3=&name4=&name5=&name6=&activityType1=&activityType2=&displayCaptcha=false",headers=headers)
-        soupObject = soup(response.content, 'html.parser')
-        table = soupObject.find_all('table')
-        result_forms_table = soupObject.find('table', {'class': 'result-forms'})
+        soupmca = soup(response.content, 'html.parser')
+        _table = soupmca.find_all('table')
+        result_forms_table = soupmca.find('table', {'class': 'result-forms'})
         if result_forms_table != None :
             # print (result_forms_table)
             for th in result_forms_table.find_all('tr',{'class': 'table-row'}) :
